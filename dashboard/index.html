@@ -293,6 +293,20 @@ footer{border-top:1px solid var(--rule);padding-block:clamp(30px,4vw,44px) clamp
 </div>
 
 <main class="wrap">
+  <!-- ============================================================ M1 -->
+  <section class="sec" id="quality">
+    <p class="tag">M1 <span class="dim">·</span> Якість даних</p>
+    <h2>Спочатку дані: чисті, але нерівні</h2>
+    <p class="lead" id="m1-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Покриття кожного датчика, % від календарних годин</p>
+      <div class="plot" style="--plot-h:520px"><canvas id="c-m1-coverage" aria-label="Горизонтальні смуги: покриття кожного датчика у відсотках"></canvas></div>
+      <figcaption>Покриття = частка годин, за які датчик передав хоча б один показ, від усіх календарних годин після його першої появи.</figcaption>
+    </figure>
+
+    <ul class="bullets" id="m1-bullets"></ul>
+  </section>
 
   <!-- ============================================================ M2 -->
   <section class="sec" id="blackouts">
@@ -420,24 +434,10 @@ footer{border-top:1px solid var(--rule);padding-block:clamp(30px,4vw,44px) clamp
     <p class="body-text" id="m7-text"></p>
   </section>
 
-  <!-- ============================================================ M1 -->
-  <section class="sec" id="quality">
-    <p class="tag">M1 <span class="dim">·</span> Якість даних</p>
-    <h2>Дані чисті, але нерівні</h2>
-    <p class="lead" id="m1-lead"></p>
-
-    <figure class="fig">
-      <p class="fig-title">Покриття кожного датчика, % від календарних годин</p>
-      <div class="plot" style="--plot-h:520px"><canvas id="c-m1-coverage" aria-label="Горизонтальні смуги: покриття кожного датчика у відсотках"></canvas></div>
-      <figcaption>Покриття = частка годин, за які датчик передав хоча б один показ, від усіх календарних годин після його першої появи.</figcaption>
-    </figure>
-
-    <ul class="bullets" id="m1-bullets"></ul>
-  </section>
 
   <!-- ============================================================ limits -->
   <section class="sec" id="limits">
-    <p class="tag">10 <span class="dim">·</span> Обмеження</p>
+    <p class="tag">Обмеження даних</p>
     <h2>Що ці дані ще не вміють показати</h2>
     <p class="lead">Шість обмежень, які треба тримати в голові, читаючи цифри вище.</p>
 
