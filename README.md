@@ -2,14 +2,9 @@
 
 *[Українська версія / Ukrainian version →](README.uk.md)*
 
-> ## 👉 [**Open the interactive dashboard**](https://daria-baranova.github.io/4331-hours/dashboard/)
->
-> All the findings of this project on one page: KPI tiles, the blackout log, room climate
-> against the weather, the cooling table and the forecast model — with interactive charts.
-> **This is the best way to see the project in two minutes.**
+### 👉 [Open the interactive dashboard](https://daria-baranova.github.io/4331-hours/dashboard/)
 
-[![Dashboard preview](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
-
+*The fastest way to see this project — two minutes, all the findings on one page.*
 
 Operational analytics on real sensor data from my own flat in Kharkiv: how often the power goes
 out, how fast the flat cools down without it, and how the street, the appliances and the kitchen
@@ -174,6 +169,8 @@ Clean data therefore carry a `stuck` flag, not just a coverage percentage.
 ## Interactive Dashboard
 
 **[Open the dashboard →](https://daria-baranova.github.io/4331-hours/dashboard/)**
+
+[![Dashboard preview](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
 
 A single self-contained HTML page (Chart.js, no build step): KPI tiles, the blackout log, room
 climate against the weather, the cooling table and the cooking events — built from
