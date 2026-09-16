@@ -2,7 +2,7 @@
 
 *[Українська версія / Ukrainian version →](README.uk.md)*
 
-### 👉 [Open the interactive dashboard](https://daria-baranova.github.io/4331-hours/dashboard/)
+### 👉 [Open the project dashboard](https://daria-baranova.github.io/4331-hours/dashboard/)
 
 *The fastest way to see this project — two minutes, all the findings on one page.*
 
@@ -166,7 +166,7 @@ Clean data therefore carry a `stuck` flag, not just a coverage percentage.
 
 ![Hours to 18 °C](images/m4_hours_table.png)
 
-## Interactive Dashboard
+## Dashboard
 
 **[Open the dashboard →](https://daria-baranova.github.io/4331-hours/dashboard/)**
 

@@ -2,7 +2,7 @@
 
 *[English version →](README.md)*
 
-### 👉 [Відкрити інтерактивний дашборд](https://daria-baranova.github.io/4331-hours/dashboard/)
+### 👉 [Відкрити дашборд проєкту](https://daria-baranova.github.io/4331-hours/dashboard/)
 
 *Найшвидший спосіб побачити проєкт — дві хвилини, усі висновки на одній сторінці.*
 
@@ -171,7 +171,7 @@ PostgreSQL / SQL → Excel → HTML-дашборд.
 
 ![Годин до 18 °C](images/m4_hours_table.png)
 
-## Інтерактивний дашборд
+## Дашборд
 
 **[Відкрити дашборд →](https://daria-baranova.github.io/4331-hours/dashboard/)**
 
