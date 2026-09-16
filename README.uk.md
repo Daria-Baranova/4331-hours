@@ -2,6 +2,15 @@
 
 *[English version →](README.md)*
 
+> ## 👉 [**Відкрити інтерактивний дашборд**](https://daria-baranova.github.io/4331-hours/dashboard/)
+>
+> Усі висновки проєкту на одній сторінці: ключові числа, журнал відключень, клімат кімнат проти
+> погоди, таблиця охолодження і модель-прогноз — з інтерактивними графіками.
+> **Це найкращий спосіб побачити проєкт за дві хвилини.**
+
+[![Превʼю дашборда](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
+
+
 Операційна аналітика на реальних сенсорних даних із власної квартири в Харкові: як часто зникає
 світло, як швидко квартира вистигає без нього і як вулиця, техніка й готування рухають
 клімат усередині. Повний ланцюг: Home Assistant API + Open-Meteo → чистка → Python / Jupyter →
@@ -169,10 +178,7 @@ PostgreSQL / SQL → Excel → HTML-дашборд.
 
 ## Інтерактивний дашборд
 
-**[Відкрити дашборд](https://daria-baranova.github.io/4331-hours/dashboard/)** (GitHub Pages) ·
-[версія-Artifact](https://claude.ai/artifact/WgphpVBtnyBPt3gTwsZz7N)
-
-[![Превʼю дашборда](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
+**[Відкрити дашборд →](https://daria-baranova.github.io/4331-hours/dashboard/)**
 
 Одна самодостатня HTML-сторінка (Chart.js, без збірки): KPI-плитки, журнал відключень, клімат
 кімнат проти погоди, таблиця охолодження й події готування — будується з `results/*.json`

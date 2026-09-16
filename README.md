@@ -2,6 +2,15 @@
 
 *[Українська версія / Ukrainian version →](README.uk.md)*
 
+> ## 👉 [**Open the interactive dashboard**](https://daria-baranova.github.io/4331-hours/dashboard/)
+>
+> All the findings of this project on one page: KPI tiles, the blackout log, room climate
+> against the weather, the cooling table and the forecast model — with interactive charts.
+> **This is the best way to see the project in two minutes.**
+
+[![Dashboard preview](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
+
+
 Operational analytics on real sensor data from my own flat in Kharkiv: how often the power goes
 out, how fast the flat cools down without it, and how the street, the appliances and the kitchen
 move the indoor climate. Full pipeline: Home Assistant API + Open-Meteo → cleaning → Python /
@@ -164,10 +173,7 @@ Clean data therefore carry a `stuck` flag, not just a coverage percentage.
 
 ## Interactive Dashboard
 
-**[Open the dashboard](https://daria-baranova.github.io/4331-hours/dashboard/)** (GitHub Pages) ·
-[Artifact version](https://claude.ai/artifact/WgphpVBtnyBPt3gTwsZz7N)
-
-[![Dashboard preview](images/dashboard_preview.png)](https://daria-baranova.github.io/4331-hours/dashboard/)
+**[Open the dashboard →](https://daria-baranova.github.io/4331-hours/dashboard/)**
 
 A single self-contained HTML page (Chart.js, no build step): KPI tiles, the blackout log, room
 climate against the weather, the cooling table and the cooking events — built from
