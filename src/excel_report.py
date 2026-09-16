@@ -567,18 +567,13 @@ def build_dashboard(wb: Workbook, months: list[str], cooling_coords: dict, n_bla
     chart4.set_categories(cats4)
     ws.add_chart(chart4, f"A{anchor_row + 63}")
 
-    # ── зона під ручну зведену таблицю + зріз ───────────────────────────────
+    # ── місце під ручну зведену таблицю + зріз ──────────────────────────────
+    # Заливки й об'єднання тут НЕ робимо: вони заважають поставити зведену.
+    # Лишаємо один підпис і вільні клітинки нижче.
     mark_row = anchor_row + 85
-    ws.merge_cells(start_row=mark_row, start_column=1, end_row=mark_row + 14, end_column=8)
     mark_cell = ws.cell(row=mark_row, column=1)
-    mark_cell.value = "Зведена таблиця + зріз — зробити вручну (див. README)"
-    mark_cell.font = Font(bold=True, italic=True, size=13, color="8A6D00")
-    mark_cell.fill = FILL_MARK
-    mark_cell.alignment = CENTER
-    for rr in range(mark_row, mark_row + 15):
-        for cc_ in range(1, 9):
-            ws.cell(row=rr, column=cc_).fill = FILL_MARK
-            ws.cell(row=rr, column=cc_).border = BORDER_ALL
+    mark_cell.value = "Місце для зведеної таблиці та зрізу (робиться вручну, див. README)"
+    mark_cell.font = Font(italic=True, size=11, color="8A6D00")
 
 
 # ── аркуш 4: Comfort ─────────────────────────────────────────────────────────
