@@ -1,0 +1,23 @@
+{
+  "target": "bedroom_temp",
+  "horizon_h": 24,
+  "n_train": 2902,
+  "n_test": 726,
+  "test_start": "2026-08-05 06:00:00+00:00",
+  "mae_persistence": 1.0756,
+  "mae_seasonal_naive": 1.3603,
+  "mae_climatology": 1.3422,
+  "mae_ridge": 0.9183,
+  "mae_hgb": 0.8059,
+  "rmse_persistence": 1.3848,
+  "rmse_seasonal_naive": 1.7479,
+  "rmse_climatology": 1.6054,
+  "rmse_ridge": 1.1199,
+  "rmse_hgb": 1.0404,
+  "best_model": "hgb",
+  "best_mae": 0.8059,
+  "gain_vs_best_baseline_c": 0.2698,
+  "top_features": "out_temp_fcst_t24,room_temp_t,hour,lag_3h,roll24_mean,out_cloud_fcst_t24,out_wind_fcst_t24,lag_12h",
+  "printernya_mae_hgb": 0.3453,
+  "printernya_mae_persistence": 0.3195
+}

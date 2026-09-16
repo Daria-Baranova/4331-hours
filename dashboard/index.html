@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4331 година</title>
+<meta name="description" content="Клімат квартири та відключення світла в Харкові: 4402 години вимірів Home Assistant, 16.03–15.09.2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@700;800&display=swap">
+<style>
+/* ---------------------------------------------------------- tokens */
+:root{
+  --ground:#FAFCFD;
+  --surface:#EFF4F7;
+  --surface-2:#E3ECF2;
+  --rule:#D5E0E7;
+  --rule-strong:#B5C7D2;
+  --ink:#12202B;
+  --ink-2:#456070;
+  --muted:#75909F;
+  --accent:#2E86AB;
+  --room-bedroom:#2E86AB;
+  --room-kitchen:#F18F01;
+  --room-printernya:#C73E1D;
+  --room-outdoor:#6C757D;
+  --outage:#16293A;
+  --neutral-ok:#AFB9BE;
+  --focus:#2E86AB;
+
+  --fs-tag:13px;
+  --fs-small:15px;
+  --fs-body:17.5px;
+  --fs-lead:21px;
+  --sans:"Commissioner","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono","Cascadia Mono",ui-monospace,monospace;
+  --display:"Unbounded","Commissioner","Segoe UI",system-ui,sans-serif;
+  --wrap:1060px;
+  --plot-h:360px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D151C;
+    --surface:#16212B;
+    --surface-2:#1E2C38;
+    --rule:#263645;
+    --rule-strong:#3A4F62;
+    --ink:#E7EFF4;
+    --ink-2:#A9BEC9;
+    --muted:#7E94A2;
+    --accent:#5CB0D4;
+    --room-bedroom:#52A9CE;
+    --room-kitchen:#FFA62B;
+    --room-printernya:#E86B4E;
+    --room-outdoor:#94A5B0;
+    --outage:#DBE7EE;
+    --neutral-ok:#69757B;
+    --focus:#7FC6E4;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D151C;
+  --surface:#16212B;
+  --surface-2:#1E2C38;
+  --rule:#263645;
+  --rule-strong:#3A4F62;
+  --ink:#E7EFF4;
+  --ink-2:#A9BEC9;
+  --muted:#7E94A2;
+  --accent:#5CB0D4;
+  --room-bedroom:#52A9CE;
+  --room-kitchen:#FFA62B;
+  --room-printernya:#E86B4E;
+  --room-outdoor:#94A5B0;
+  --outage:#DBE7EE;
+  --neutral-ok:#69757B;
+  --focus:#7FC6E4;
+  color-scheme:dark;
+}
+
+/* ---------------------------------------------------------- base */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:var(--fs-body);
+  line-height:1.65;
+  font-weight:400;
+  letter-spacing:.002em;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-inline:24px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------------------------------------------------------- hero */
+.hero{padding-block:clamp(40px,7vw,80px) clamp(28px,4vw,44px)}
+.eyebrow{
+  font-family:var(--mono);font-size:var(--fs-tag);
+  text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+  margin-bottom:clamp(14px,2.5vw,24px);
+}
+h1{font-family:var(--display);font-weight:800;line-height:.86;letter-spacing:-.025em}
+h1 .num{display:block;font-size:clamp(68px,17vw,158px);color:var(--ink)}
+h1 .word{
+  display:block;font-family:var(--sans);font-weight:600;
+  font-size:clamp(27px,6.4vw,58px);letter-spacing:-.01em;line-height:1.05;
+  color:var(--ink-2);margin-top:clamp(4px,1vw,10px);
+}
+.hero-sub{
+  font-size:clamp(18px,2.4vw,22px);color:var(--ink-2);
+  max-width:34ch;margin-top:clamp(18px,3vw,28px);
+}
+
+/* uptime strip */
+.strip-block{margin-top:clamp(26px,4vw,40px)}
+.strip{
+  position:relative;height:16px;background:var(--surface);
+  border-radius:2px;overflow:hidden;
+}
+.strip.tall{height:56px}
+.strip .notch{
+  position:absolute;top:0;bottom:0;background:var(--outage);
+  min-width:3px;border-radius:1px;
+}
+.strip .tick{position:absolute;top:0;bottom:0;width:1px;background:var(--rule)}
+.strip-axis{
+  position:relative;height:20px;margin-top:6px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+}
+.strip-axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.strip-note{font-size:var(--fs-small);color:var(--muted);margin-top:10px}
+
+/* ---------------------------------------------------------- kpi */
+.kpis{
+  display:grid;gap:2px;margin-top:clamp(26px,4vw,40px);
+  grid-template-columns:repeat(4,1fr);background:var(--rule);
+  border-block:1px solid var(--rule);
+}
+.kpi{background:var(--ground);padding:22px 20px 24px;display:flex;flex-direction:column;gap:4px}
+.kpi-label{
+  font-family:var(--mono);font-size:var(--fs-tag);text-transform:uppercase;
+  letter-spacing:.1em;color:var(--muted);line-height:1.4;min-height:2.8em;
+}
+.kpi-num{
+  font-family:var(--display);font-weight:700;font-size:clamp(32px,4.6vw,46px);
+  line-height:1.05;letter-spacing:-.03em;color:var(--ink);
+  font-variant-numeric:tabular-nums;margin-top:6px;
+}
+.kpi-num .unit{font-family:var(--sans);font-weight:600;font-size:.44em;letter-spacing:0;color:var(--ink-2);margin-left:.3em}
+.kpi-note{font-size:var(--fs-small);color:var(--ink-2);line-height:1.45}
+
+/* ---------------------------------------------------------- sections */
+main{padding-bottom:clamp(40px,6vw,72px)}
+.sec{padding-block:clamp(44px,6.5vw,76px);border-top:1px solid var(--rule)}
+.sec:first-of-type{border-top:none}
+.tag{
+  font-family:var(--mono);font-size:var(--fs-tag);text-transform:uppercase;
+  letter-spacing:.13em;color:var(--accent);margin-bottom:10px;
+}
+.tag .dim{color:var(--muted)}
+h2{font-size:clamp(26px,3.6vw,34px);font-weight:700;letter-spacing:-.018em;line-height:1.2;max-width:22ch}
+.lead{
+  font-size:var(--fs-lead);font-weight:600;line-height:1.45;
+  max-width:44ch;margin-top:clamp(16px,2.4vw,22px);color:var(--ink);
+}
+.body-text{max-width:62ch;color:var(--ink-2);margin-top:16px}
+.body-text + .body-text{margin-top:12px}
+
+/* ---------------------------------------------------------- figures */
+.fig{margin:clamp(22px,3.4vw,34px) 0 0}
+.plot{
+  background:var(--surface);border-radius:3px;
+  padding:18px 16px 14px;height:var(--plot-h);position:relative;
+}
+.fig figcaption{font-size:var(--fs-small);color:var(--muted);margin-top:12px;max-width:72ch}
+.fig-title{
+  font-family:var(--mono);font-size:var(--fs-tag);text-transform:uppercase;
+  letter-spacing:.1em;color:var(--ink-2);margin-bottom:10px;
+}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.6vw,28px);align-items:start}
+.stack{display:flex;flex-direction:column;gap:clamp(22px,3vw,32px);margin-top:clamp(22px,3.4vw,34px)}
+
+/* ---------------------------------------------------------- tables */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:var(--fs-small);min-width:380px}
+caption{
+  font-family:var(--mono);font-size:var(--fs-tag);text-transform:uppercase;
+  letter-spacing:.1em;color:var(--ink-2);text-align:left;margin-bottom:10px;
+}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--rule)}
+thead th{
+  background:var(--surface-2);font-weight:600;color:var(--ink-2);
+  font-size:var(--fs-tag);text-transform:uppercase;letter-spacing:.07em;
+  border-bottom:1px solid var(--rule-strong);
+}
+tbody th{font-weight:600;color:var(--ink)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:none}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:9px;vertical-align:baseline}
+
+/* heat grid (M4) */
+.heat td{border:none;border-radius:2px;text-align:right;font-family:var(--mono);
+  font-variant-numeric:tabular-nums;font-weight:500;font-size:16px;padding:13px 14px}
+.heat th{border-bottom:none}
+.heat thead th{background:transparent;border-bottom:1px solid var(--rule)}
+.heat tbody th{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.heat{border-spacing:3px;border-collapse:separate;min-width:340px}
+
+/* ---------------------------------------------------------- notes & lists */
+.note{
+  border-left:3px solid var(--room-kitchen);padding:2px 0 2px 16px;
+  font-size:var(--fs-small);color:var(--ink-2);max-width:64ch;margin-top:18px;
+}
+.note b{color:var(--ink)}
+.bullets{list-style:none;padding:0;margin:clamp(20px,3vw,28px) 0 0;display:grid;gap:14px;max-width:64ch}
+.bullets li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline}
+.bullets .k{
+  font-family:var(--mono);font-weight:500;color:var(--accent);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.limits{list-style:none;padding:0;margin:clamp(20px,3vw,28px) 0 0;
+  display:grid;gap:0;border-top:1px solid var(--rule)}
+.limits li{padding:15px 0;border-bottom:1px solid var(--rule);
+  display:grid;grid-template-columns:2.2em 1fr;gap:8px;max-width:70ch;color:var(--ink-2)}
+.limits .n{font-family:var(--mono);color:var(--muted);font-size:var(--fs-small)}
+.limits b{color:var(--ink);font-weight:600}
+
+/* metric strip */
+.metrics{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:2px;background:var(--rule);border-block:1px solid var(--rule);
+  margin-top:clamp(22px,3vw,30px);
+}
+.metric{background:var(--ground);padding:16px 18px}
+.metric .v{font-family:var(--mono);font-weight:500;font-size:25px;
+  color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2;letter-spacing:-.02em}
+.metric .l{font-size:var(--fs-small);color:var(--ink-2);margin-top:4px;line-height:1.4}
+
+/* ---------------------------------------------------------- footer */
+footer{border-top:1px solid var(--rule);padding-block:clamp(30px,4vw,44px) clamp(44px,6vw,72px)}
+.foot-row{display:flex;flex-wrap:wrap;gap:8px 28px;font-size:var(--fs-small);color:var(--ink-2)}
+.foot-row .item{display:flex;gap:8px}
+.foot-row .k{font-family:var(--mono);color:var(--muted);text-transform:uppercase;
+  font-size:var(--fs-tag);letter-spacing:.09em;align-self:center}
+.built{font-family:var(--mono);font-size:var(--fs-tag);color:var(--muted);margin-top:22px}
+
+/* ---------------------------------------------------------- responsive */
+@media (max-width:860px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid-2{grid-template-columns:1fr}
+  :root{--plot-h:330px}
+}
+@media (max-width:560px){
+  body{font-size:17px}
+  .wrap{padding-inline:18px}
+  :root{--plot-h:300px;--fs-lead:19.5px}
+  .kpis{grid-template-columns:1fr}
+  .kpi{padding:18px 16px 20px}
+  .kpi-label{min-height:0}
+  .plot{padding:14px 10px 10px}
+  h1 .num{letter-spacing:-.035em}
+  .strip.tall{height:44px}
+  th,td{padding:10px 9px}
+  .heat td{font-size:15px;padding:12px 9px}
+  table{min-width:330px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow" id="hero-eyebrow">Харків · Home Assistant · Open-Meteo</p>
+    <h1><span class="num">4331</span><span class="word">година</span></h1>
+    <p class="hero-sub">Клімат квартири та відключення світла, Харків, <span id="hero-period">16.03–15.09.2026</span>.</p>
+
+    <div class="strip-block">
+      <div class="strip" id="hero-strip" role="img" aria-label="Смуга часу за шість місяців: п'ять темних рисок — відключення світла"></div>
+      <p class="strip-note">Кожен піксель смуги — година вимірів. Темні риски — п'ять відключень світла.</p>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+  </header>
+</div>
+
+<main class="wrap">
+
+  <!-- ============================================================ M2 -->
+  <section class="sec" id="blackouts">
+    <p class="tag">M2 <span class="dim">·</span> Хроніка блекаутів</p>
+    <h2>Світло зникало п'ять разів за півроку</h2>
+    <p class="lead" id="m2-lead">Чотири з п'яти відключень почалися об 11:00–12:00, тричі — у суботу.</p>
+
+    <figure class="fig">
+      <p class="fig-title">Коли зникало світло</p>
+      <div class="strip tall" id="m2-strip" role="img" aria-label="Часова шкала п'яти відключень світла з березня по вересень 2026"></div>
+      <div class="strip-axis" id="m2-axis"></div>
+      <figcaption>Відключення видно як порожнечу в даних: коли сідає батарея ДБЖ, сервер Home Assistant гасне і запис зупиняється. Дірка коротша за 3 хвилини вважається шумом.</figcaption>
+    </figure>
+
+    <div class="grid-2 stack">
+      <figure class="fig" style="margin-top:0">
+        <p class="fig-title">Годин без світла по місяцях</p>
+        <div class="plot"><canvas id="c-m2-monthly" aria-label="Стовпчики: години без світла за кожен місяць"></canvas></div>
+      </figure>
+      <div>
+        <div class="scroll-x">
+          <table>
+            <caption>Усі п'ять подій</caption>
+            <thead><tr><th>Дата</th><th>День тижня</th><th>Початок</th><th class="n">Годин</th></tr></thead>
+            <tbody id="m2-table"></tbody>
+          </table>
+        </div>
+        <p class="note" id="m2-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ M3 -->
+  <section class="sec" id="climate">
+    <p class="tag">M3 <span class="dim">·</span> Квартира проти погоди</p>
+    <h2>Дім не повторює вулицю, а гасить її</h2>
+    <p class="lead" id="m3-lead">Добові коливання всередині слабші за вуличні у 3–15 разів, і пік тепла в кімнаті настає раніше за вуличний.</p>
+
+    <figure class="fig">
+      <p class="fig-title">Середня температура по годині доби (київський час)</p>
+      <div class="plot"><canvas id="c-m3-cycle" aria-label="Чотири лінії добового циклу: кімната, кухня, кладова, надворі"></canvas></div>
+      <figcaption id="m3-cycle-cap"></figcaption>
+    </figure>
+
+    <div class="grid-2 stack">
+      <div class="scroll-x">
+        <table>
+          <caption>Як кожна кімната реагує на вулицю</caption>
+          <thead><tr><th>Кімната</th><th class="n">Згладжування</th><th class="n">Лаг</th><th class="n">Чутливість</th></tr></thead>
+          <tbody id="m3-table"></tbody>
+        </table>
+        <p class="note"><b>Згладжування</b> — у скільки разів денний перепад удома менший за вуличний. <b>Лаг</b> — зсув максимальної кореляції з вулицею; мінус означає, що кімната йде попереду. <b>Чутливість</b> — на скільки °C теплішає вдома на кожен +1 °C надворі (у дужках — 95 % довірчий інтервал).</p>
+      </div>
+      <figure class="fig" style="margin-top:0">
+        <p class="fig-title">Скільки часу температура була комфортною</p>
+        <div class="plot" style="--plot-h:300px"><canvas id="c-m3-comfort" aria-label="Смуги: частка часу надто холодно, комфортно, надто тепло"></canvas></div>
+        <figcaption id="m3-comfort-cap"></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================================================ M4 -->
+  <section class="sec" id="heat">
+    <p class="tag">M4 <span class="dim">·</span> Скільки тепла тримає квартира</p>
+    <h2>Від 22 до 18 °C — питання діб, а не годин</h2>
+    <p class="lead" id="m4-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Годин від 22 °C до 18 °C без опалення</p>
+      <div class="scroll-x">
+        <table class="heat">
+          <thead><tr><th>Надворі</th><th class="n" id="h-bed">кімната</th><th class="n" id="h-kit">кухня</th><th class="n" id="h-pri">кладова</th></tr></thead>
+          <tbody id="m4-table"></tbody>
+        </table>
+      </div>
+      <figcaption>Розрахунок за законом охолодження Ньютона: T(t) = T_вул + (T₀ − T_вул)·e^(−k·t). Що холодніше надворі, то швидше падає температура всередині.</figcaption>
+    </figure>
+
+    <p class="note" id="m4-note"></p>
+  </section>
+
+  <!-- ============================================================ M5 -->
+  <section class="sec" id="tech">
+    <p class="tag">M5 <span class="dim">·</span> Скільки градусів додає техніка</p>
+    <h2>Кладова без вікна — найтепліша кімната</h2>
+    <p class="lead" id="m5-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Наскільки кладова тепліша за інші кімнати, °C</p>
+      <div class="plot"><canvas id="c-m5-gap" aria-label="Стовпчики по місяцях: різниця температур кладової проти кімнати та кухні"></canvas></div>
+      <figcaption id="m5-cap"></figcaption>
+    </figure>
+
+    <div class="metrics" id="m5-metrics"></div>
+    <p class="body-text" id="m5-text"></p>
+  </section>
+
+  <!-- ============================================================ M6 -->
+  <section class="sec" id="cooking">
+    <p class="tag">M6 <span class="dim">·</span> Готовка на кухні</p>
+    <h2>Вологість на кухні розповідає, коли вечеряють</h2>
+    <p class="lead" id="m6-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Події готування по годині доби (київський час)</p>
+      <div class="plot"><canvas id="c-m6-hours" aria-label="Стовпчики: кількість подій готування за кожну годину доби"></canvas></div>
+      <figcaption id="m6-cap"></figcaption>
+    </figure>
+
+    <div class="metrics" id="m6-metrics"></div>
+  </section>
+
+  <!-- ============================================================ M7 -->
+  <section class="sec" id="model">
+    <p class="tag">M7 <span class="dim">·</span> Модель-прогноз</p>
+    <h2>Модель виграє в базового прогнозу, але небагато</h2>
+    <p class="lead" id="m7-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Середня абсолютна помилка прогнозу на 24 години, °C</p>
+      <div class="plot" style="--plot-h:340px"><canvas id="c-m7-mae" aria-label="Смуги: середня абсолютна помилка п'яти прогнозів"></canvas></div>
+      <figcaption id="m7-cap"></figcaption>
+    </figure>
+
+    <p class="body-text" id="m7-text"></p>
+  </section>
+
+  <!-- ============================================================ M1 -->
+  <section class="sec" id="quality">
+    <p class="tag">M1 <span class="dim">·</span> Якість даних</p>
+    <h2>Дані чисті, але нерівні</h2>
+    <p class="lead" id="m1-lead"></p>
+
+    <figure class="fig">
+      <p class="fig-title">Покриття кожного датчика, % від календарних годин</p>
+      <div class="plot" style="--plot-h:520px"><canvas id="c-m1-coverage" aria-label="Горизонтальні смуги: покриття кожного датчика у відсотках"></canvas></div>
+      <figcaption>Покриття = частка годин, за які датчик передав хоча б один показ, від усіх календарних годин після його першої появи.</figcaption>
+    </figure>
+
+    <ul class="bullets" id="m1-bullets"></ul>
+  </section>
+
+  <!-- ============================================================ limits -->
+  <section class="sec" id="limits">
+    <p class="tag">10 <span class="dim">·</span> Обмеження</p>
+    <h2>Що ці дані ще не вміють показати</h2>
+    <p class="lead">Шість обмежень, які треба тримати в голові, читаючи цифри вище.</p>
+
+    <ol class="limits">
+      <li><span class="n">01</span><span><b>Детальна історія — лише 10 днів.</b> Довгі ряди аналізуємо по годинах, тож короткі події видно тільки на останньому відрізку.</span></li>
+      <li><span class="n">02</span><span><b>ДБЖ тримає сервер.</b> Поки працює батарея, запис триває — найкоротші відключення можемо не побачити взагалі.</span></li>
+      <li><span class="n">03</span><span><b>Дані починаються з 16.03.2026.</b> Зими в даних поки немає, а саме зимові блекаути найважливіші.</span></li>
+      <li><span class="n">04</span><span><b>Літні блекаути слабо показують охолодження.</b> Надворі було майже так само тепло, як у квартирі: метод відлагоджено, числа уточнимо взимку.</span></li>
+      <li><span class="n">05</span><span><b>Кухонний датчик має покриття 68 %.</b> Висновки по кухні обережніші за інші.</span></li>
+      <li><span class="n">06</span><span><b>Одна квартира, не вибірка.</b> Це кейс, а не статистика по будинках — узагальнювати не можна.</span></li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <div class="foot-row">
+    <span class="item"><span class="k">Дані</span> Home Assistant + Open-Meteo</span>
+    <span class="item"><span class="k">Код</span> <a href="https://github.com/Daria-Baranova/4331-hours">github.com/Daria-Baranova/4331-hours</a></span>
+    <span class="item"><span class="k">Автор</span> Даша Баранова</span>
+  </div>
+  <p class="built" id="built"></p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+"use strict";
+const DATA = {"meta":{"period_start":"16.03.2026","period_end":"15.09.2026","built":"15.09.2026","total_hours":4402,"sensors":14,"rows_hourly":53946,"rows_detailed":365047,"uptime_pct":99.2},"m1":{"sensors":[{"label":"кімната · вологість","group":"bedroom","coverage":98.2,"hours":4323,"calendar":4402},{"label":"кімната · температура","group":"bedroom","coverage":98.2,"hours":4323,"calendar":4402},{"label":"кімната · освітленість","group":"bedroom","coverage":98.1,"hours":3856,"calendar":3932},{"label":"кладова · вологість","group":"printernya","coverage":96.4,"hours":3795,"calendar":3938},{"label":"кладова · температура","group":"printernya","coverage":96.4,"hours":3795,"calendar":3938},{"label":"сервер · завантаження CPU","group":"other","coverage":95.0,"hours":3816,"calendar":4015},{"label":"NAS диск sda","group":"other","coverage":94.4,"hours":3352,"calendar":3550},{"label":"NAS диск sdb","group":"other","coverage":94.4,"hours":3352,"calendar":3550},{"label":"NAS NVMe","group":"other","coverage":94.4,"hours":3352,"calendar":3550},{"label":"квітка · температура (батарейка)","group":"other","coverage":76.6,"hours":1709,"calendar":2231},{"label":"кухня · вологість","group":"kitchen","coverage":68.0,"hours":2679,"calendar":3942},{"label":"кухня · температура","group":"kitchen","coverage":68.0,"hours":2679,"calendar":3942},{"label":"ПК · температура","group":"other","coverage":34.1,"hours":1459,"calendar":4277},{"label":"ПК · потужність","group":"other","coverage":33.9,"hours":1450,"calendar":4277}],"coverage_all":81.5,"coverage_rooms":89.3,"duplicates":0,"out_of_range":0,"stuck_hours":384,"longest_stuck":144,"n_stuck_runs":6,"non_numeric":82,"n_gaps":380,"longest_gap":722},"m2":{"events":[{"id":"OUT-001","date":"18.03.2026","weekday":"середа","time":"03:00","hours":6.0,"start_ms":1773795600000,"end_ms":1773817200000,"low_confidence":true},{"id":"OUT-002","date":"13.06.2026","weekday":"субота","time":"11:00","hours":8.0,"start_ms":1781337600000,"end_ms":1781366400000,"low_confidence":false},{"id":"OUT-003","date":"11.07.2026","weekday":"субота","time":"12:00","hours":5.0,"start_ms":1783760400000,"end_ms":1783778400000,"low_confidence":false},{"id":"OUT-004","date":"12.07.2026","weekday":"неділя","time":"11:00","hours":7.0,"start_ms":1783843200000,"end_ms":1783868400000,"low_confidence":false},{"id":"OUT-005","date":"25.07.2026","weekday":"субота","time":"11:00","hours":9.0,"start_ms":1784966400000,"end_ms":1784998800000,"low_confidence":false}],"monthly":[{"month":"2026-03","label":"бер 26","hours":6},{"month":"2026-04","label":"кві 26","hours":0},{"month":"2026-05","label":"тра 26","hours":0},{"month":"2026-06","label":"чер 26","hours":8},{"month":"2026-07","label":"лип 26","hours":21},{"month":"2026-08","label":"сер 26","hours":0},{"month":"2026-09","label":"вер 26","hours":0}],"timeline":{"start_ms":1773648000000,"end_ms":1789495200000,"ticks":[{"label":"кві","ms":1775001600000},{"label":"тра","ms":1777593600000},{"label":"чер","ms":1780272000000},{"label":"лип","ms":1782864000000},{"label":"сер","ms":1785542400000},{"label":"вер","ms":1788220800000}]},"n_events":5,"total_hours":35,"median_hours":7.0,"max_hours":9.0,"max_date":"25.07.2026","uptime_pct":99.2,"n_saturday":3,"n_morning":4,"weekday_hours":[{"key":"sat","label":"субота","events":3,"hours":22},{"key":"sun","label":"неділя","events":1,"hours":7},{"key":"wed","label":"середа","events":1,"hours":6}]},"m3":{"cycle":{"hours":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"bedroom":[23.97,23.7,23.42,23.23,23.05,23.09,23.6,24.25,24.85,25.21,25.28,25.24,25.18,25.04,24.91,24.84,24.8,24.74,24.7,24.5,24.35,24.2,24.11,24.06],"kitchen":[26.0,25.8,25.5,25.23,25.02,24.9,25.0,25.31,25.68,25.98,26.21,26.36,26.4,26.31,26.2,26.16,26.17,26.14,26.09,26.0,25.97,25.97,26.01,26.01],"printernya":[27.31,27.32,27.33,27.32,27.31,27.3,27.29,27.29,27.31,27.33,27.35,27.34,27.33,27.31,27.27,27.25,27.25,27.25,27.25,27.26,27.27,27.26,27.28,27.29],"outdoor":[14.91,14.29,13.74,13.15,12.66,12.29,12.44,13.42,14.96,16.83,18.26,19.44,20.28,20.76,20.86,21.12,20.82,20.5,19.86,18.97,17.91,17.04,16.3,15.56]},"rooms":[{"key":"bedroom","label":"кімната","mean":24.4,"min":19.2,"max":30.2,"smoothing":2.9,"daily_range":3.3,"lag_h":-2,"lag_ok":true,"sens":0.22,"sens_lo":0.2,"sens_hi":0.24,"r2":0.66,"n_hours":4154},{"key":"kitchen","label":"кухня","mean":25.9,"min":21.7,"max":30.4,"smoothing":4.5,"daily_range":2.1,"lag_h":0,"lag_ok":true,"sens":0.22,"sens_lo":0.2,"sens_hi":0.23,"r2":0.7,"n_hours":2656},{"key":"printernya","label":"кладова","mean":27.3,"min":22.2,"max":30.2,"smoothing":14.9,"daily_range":0.7,"lag_h":-8,"lag_ok":false,"sens":0.22,"sens_lo":0.2,"sens_hi":0.25,"r2":0.47,"n_hours":3795}],"comfort":[{"label":"кімната","key":"bedroom","cold":0.5,"ok":42.3,"hot":57.1,"hours":4154},{"label":"кухня","key":"kitchen","cold":0.0,"ok":22.0,"hot":78.0,"hours":2656},{"label":"кладова","key":"printernya","cold":0.0,"ok":17.4,"hot":82.6,"hours":3795}],"out_mean":16.9,"out_min":-1.3,"out_max":36.1,"out_range":9.8,"peak_hour_outdoor":15,"bedroom_peak_hour":10,"comfort_low":20,"comfort_high":24},"m4":{"grid":[{"t_out":-20,"bedroom":29,"kitchen":45,"printernya":33,"rate_bedroom":0.146},{"t_out":-15,"bedroom":33,"kitchen":52,"printernya":37,"rate_bedroom":0.129},{"t_out":-10,"bedroom":38,"kitchen":60,"printernya":44,"rate_bedroom":0.111},{"t_out":-5,"bedroom":46,"kitchen":72,"printernya":53,"rate_bedroom":0.094},{"t_out":0,"bedroom":58,"kitchen":91,"printernya":66,"rate_bedroom":0.077},{"t_out":5,"bedroom":77,"kitchen":121,"printernya":88,"rate_bedroom":0.059},{"t_out":10,"bedroom":117,"kitchen":183,"printernya":133,"rate_bedroom":0.042}],"t0":22,"target":18,"hours_minus10":38,"rate_minus10":0.11,"k_bedroom":0.0035,"k_bedroom_lo":-0.0023,"k_bedroom_hi":0.0092,"n_events":5,"note":"k міряє природну теплову сталу квартири разом із теплом сусідів крізь стіни: всі п'ять відключень — літні, надворі було майже так само тепло, як у квартирі. Зимовий блекаут з холодними батареями перерахуємо, коли з'являться зимові дані."},"m5":{"monthly":[{"month":"2026-04","label":"кві 26","bedroom":1.46,"kitchen":-0.05},{"month":"2026-05","label":"тра 26","bedroom":1.52,"kitchen":0.02},{"month":"2026-06","label":"чер 26","bedroom":2.96,"kitchen":1.47},{"month":"2026-07","label":"лип 26","bedroom":3.14,"kitchen":1.25},{"month":"2026-08","label":"сер 26","bedroom":3.76,"kitchen":1.47},{"month":"2026-09","label":"вер 26","bedroom":3.74,"kitchen":1.53}],"gap_bedroom":2.7,"gap_kitchen":0.6,"nvme_coef":0.7,"nvme_r2":0.43,"pc_coef":-0.067,"pc_p":0.48,"pc_on_pct":32.9,"active_delta":0.1,"active_p":0.12,"n_hours":3237},"m6":{"hours":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"counts":[1,1,1,0,1,0,0,0,0,0,0,1,1,1,0,2,2,1,3,3,3,2,2,1],"counts_detailed":[0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0,2,1,0,0],"n_hourly":26,"n_detailed":6,"rise_pp":12.3,"return_min":38,"duration_min":60,"peak_hour":19,"evening_pct":53.8,"per_week":1.0,"coverage_pct":68.0},"m7":{"models":[{"key":"persistence","label":"«як годину тому»","kind":"базовий","mae":1.076,"rmse":1.385},{"key":"seasonal","label":"«як учора о цій порі»","kind":"базовий","mae":1.36,"rmse":1.748},{"key":"climatology","label":"середнє по годині доби","kind":"базовий","mae":1.342,"rmse":1.605},{"key":"ridge","label":"лінійна (Ridge)","kind":"модель","mae":0.918,"rmse":1.12},{"key":"hgb","label":"бустинг (HGB)","kind":"модель","mae":0.806,"rmse":1.04}],"best":"hgb","best_mae":0.81,"gain":0.27,"gain_pct":25,"horizon_h":24,"n_train":2902,"n_test":726,"test_start":"05.08.2026","features":["out_temp_fcst_t24","room_temp_t","hour","lag_3h"]}};
+
+/* ------------------------------------------------------------ utils */
+const $ = (id) => document.getElementById(id);
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Число з пробілом-роздільником тисяч і комою як десятковим знаком. */
+function fmt(value, digits = 0) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return value.toLocaleString("uk-UA", {
+    minimumFractionDigits: digits, maximumFractionDigits: digits,
+  });
+}
+const pct = (v, d = 1) => fmt(v, d) + " %";
+const deg = (v, d = 1) => fmt(v, d) + " °C";
+
+function tokens() {
+  const cs = getComputedStyle(document.documentElement);
+  const read = (name) => cs.getPropertyValue(name).trim();
+  return {
+    ink: read("--ink"), ink2: read("--ink-2"), muted: read("--muted"),
+    rule: read("--rule"), surface: read("--surface"), ground: read("--ground"),
+    accent: read("--accent"), outage: read("--outage"), neutralOk: read("--neutral-ok"),
+    bedroom: read("--room-bedroom"), kitchen: read("--room-kitchen"),
+    printernya: read("--room-printernya"), outdoor: read("--room-outdoor"),
+  };
+}
+
+function hexToRgb(hex) {
+  const h = hex.replace("#", "").trim();
+  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+}
+const alpha = (hex, a) => `rgba(${hexToRgb(hex).join(",")},${a})`;
+
+/** Змішує колір із фоном і повертає читабельний колір тексту. */
+function inkOn(hex, a, groundHex) {
+  const [r, g, b] = hexToRgb(hex), [gr, gg, gb] = hexToRgb(groundHex);
+  const mix = [r * a + gr * (1 - a), g * a + gg * (1 - a), b * a + gb * (1 - a)];
+  const lum = (0.2126 * mix[0] + 0.7152 * mix[1] + 0.0722 * mix[2]) / 255;
+  return lum > 0.55 ? "#0B141B" : "#F6FAFC";
+}
+
+/* ------------------------------------------------------------ chart defaults */
+const charts = [];
+
+function applyDefaults() {
+  const t = tokens();
+  Chart.defaults.font.family = '"Commissioner","Segoe UI",system-ui,sans-serif';
+  Chart.defaults.font.size = 14;
+  Chart.defaults.color = t.ink2;
+  Chart.defaults.animation = REDUCED ? false : { duration: 420 };
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.pointStyle = "rectRounded";
+  Chart.defaults.plugins.legend.labels.boxWidth = 11;
+  Chart.defaults.plugins.legend.labels.boxHeight = 11;
+  Chart.defaults.plugins.legend.labels.padding = 18;
+  Chart.defaults.plugins.legend.labels.font = { size: 15, weight: 500 };
+  Chart.defaults.plugins.tooltip.backgroundColor = t.ink;
+  Chart.defaults.plugins.tooltip.titleColor = t.ground;
+  Chart.defaults.plugins.tooltip.bodyColor = t.ground;
+  Chart.defaults.plugins.tooltip.titleFont = { size: 15, weight: 600 };
+  Chart.defaults.plugins.tooltip.bodyFont = { size: 15 };
+  Chart.defaults.plugins.tooltip.padding = 12;
+  Chart.defaults.plugins.tooltip.cornerRadius = 3;
+  Chart.defaults.plugins.tooltip.displayColors = true;
+  Chart.defaults.plugins.tooltip.boxPadding = 5;
+}
+
+/** Осі без зайвих ліній: горизонтальна сітка, без рамки. */
+function axes({ xTitle, yTitle, gridAxis = "y", stacked = false, xMax, beginAtZero = true, intStep = false } = {}) {
+  const t = tokens();
+  const tick = { color: t.muted, font: { size: 13.5, family: '"IBM Plex Mono",monospace' } };
+  const title = (text) => text
+    ? { display: true, text, color: t.muted, font: { size: 13, weight: 500 }, padding: { top: 8, bottom: 4 } }
+    : { display: false };
+  return {
+    x: {
+      stacked, max: xMax,
+      grid: { display: gridAxis === "x", color: t.rule, drawTicks: false },
+      border: { display: false },
+      ticks: { ...tick, padding: 8 },
+      title: title(xTitle),
+    },
+    y: {
+      stacked, beginAtZero,
+      grid: { display: gridAxis === "y", color: t.rule, drawTicks: false },
+      border: { display: false },
+      ticks: { ...tick, padding: 10, stepSize: intStep ? 1 : undefined, precision: intStep ? 0 : undefined },
+      title: title(yTitle),
+    },
+  };
+}
+
+/* ------------------------------------------------------------ hero + strip */
+function renderKpis() {
+  const { meta, m2, m4 } = DATA;
+  const tiles = [
+    { label: "Години даних", num: fmt(meta.total_hours), unit: "год",
+      note: `${meta.period_start} — ${meta.period_end}` },
+    { label: "Uptime світла", num: fmt(meta.uptime_pct, 1), unit: "%",
+      note: "частка годин, коли світло було" },
+    { label: "Блекаути", num: fmt(m2.n_events), unit: "подій",
+      note: `${fmt(m2.total_hours)} годин без світла` },
+    { label: `Від ${m4.t0} до ${m4.target} °C при −10 °C`, num: "≈ " + fmt(m4.hours_minus10), unit: "год",
+      note: "оцінка за літніми даними" },
+  ];
+  $("kpis").innerHTML = tiles.map((t) => `
+    <div class="kpi">
+      <p class="kpi-label">${t.label}</p>
+      <p class="kpi-num">${t.num}<span class="unit">${t.unit}</span></p>
+      <p class="kpi-note">${t.note}</p>
+    </div>`).join("");
+}
+
+function renderStrip(el, withTooltip) {
+  const tl = DATA.m2.timeline;
+  const span = tl.end_ms - tl.start_ms;
+  const at = (ms) => ((ms - tl.start_ms) / span) * 100;
+  let html = tl.ticks.map((t) => `<i class="tick" style="left:${at(t.ms)}%"></i>`).join("");
+  html += DATA.m2.events.map((e) => {
+    const left = at(e.start_ms), width = Math.max(at(e.end_ms) - left, 0.28);
+    const label = `${e.date}, ${e.weekday} — ${fmt(e.hours, 0)} год без світла`;
+    return `<i class="notch" style="left:${left}%;width:${width}%" title="${label}"></i>`;
+  }).join("");
+  el.innerHTML = html;
+  if (!withTooltip) return;
+  $("m2-axis").innerHTML = tl.ticks.map((t) =>
+    `<span style="left:${at(t.ms)}%">${t.label}</span>`).join("");
+}
+
+/* ------------------------------------------------------------ M2 */
+function renderM2() {
+  const m2 = DATA.m2, t = tokens();
+  const times = { 1: "один раз", 2: "двічі", 3: "тричі", 4: "чотири рази", 5: "п'ять разів" };
+  $("m2-lead").textContent =
+    `${m2.n_morning} з ${m2.n_events} відключень почалися об 11:00–12:00, ` +
+    `${times[m2.n_saturday] || m2.n_saturday + " рази"} — у суботу.`;
+
+  $("m2-table").innerHTML = m2.events.map((e) => `
+    <tr>
+      <th scope="row">${e.date}</th>
+      <td>${e.weekday}</td>
+      <td class="n">${e.time}</td>
+      <td class="n">${fmt(e.hours, 0)}</td>
+    </tr>`).join("");
+
+  $("m2-note").innerHTML =
+    `Медіана події — <b>${fmt(m2.median_hours, 0)} год</b>, найдовша — <b>${fmt(m2.max_hours, 0)} год</b> ${m2.max_date}. ` +
+    `Перша подія (18.03) позначена як низької впевненості: тоді працював лише один розетковий датчик.`;
+
+  charts.push(new Chart($("c-m2-monthly"), {
+    type: "bar",
+    data: {
+      labels: m2.monthly.map((d) => d.label),
+      datasets: [{
+        label: "годин без світла",
+        data: m2.monthly.map((d) => d.hours),
+        backgroundColor: t.outage,
+        borderRadius: { topLeft: 4, topRight: 4 },
+        borderSkipped: "bottom",
+        maxBarThickness: 46,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ yTitle: "годин" }),
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c) => `${fmt(c.parsed.y)} год без світла` } },
+      },
+    },
+  }));
+}
+
+/* ------------------------------------------------------------ M3 */
+function renderM3() {
+  const m3 = DATA.m3, t = tokens();
+  const bed = m3.rooms.find((r) => r.key === "bedroom");
+
+  const pri = m3.rooms.find((r) => r.key === "printernya");
+  $("m3-cycle-cap").textContent =
+    `Надворі найтепліше о ${m3.peak_hour_outdoor}:00, у кімнаті — о ${m3.bedroom_peak_hour}:00. ` +
+    `Кімната випереджає вулицю на ${Math.abs(bed.lag_h)} год (зсув максимальної кореляції). ` +
+    `Кладова без вікна майже пряма: за добу вона змінюється лише на ${deg(pri.daily_range, 1)}, ` +
+    `тоді як вулиця — на ${deg(m3.out_range, 1)}.`;
+
+  const series = [
+    { key: "bedroom", label: "кімната", color: t.bedroom },
+    { key: "kitchen", label: "кухня", color: t.kitchen },
+    { key: "printernya", label: "кладова", color: t.printernya },
+    { key: "outdoor", label: "надворі", color: t.outdoor },
+  ];
+  charts.push(new Chart($("c-m3-cycle"), {
+    type: "line",
+    data: {
+      labels: m3.cycle.hours.map((h) => String(h).padStart(2, "0")),
+      datasets: series.map((s) => ({
+        label: s.label,
+        data: m3.cycle[s.key],
+        borderColor: s.color,
+        backgroundColor: s.color,
+        borderWidth: 2.5,
+        borderDash: s.key === "outdoor" ? [6, 4] : undefined,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        pointHoverBorderWidth: 2,
+        pointHoverBorderColor: t.surface,
+        tension: 0.35,
+      })),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      scales: axes({ xTitle: "година доби, Київ", yTitle: "°C", beginAtZero: false }),
+      plugins: {
+        legend: { position: "top", align: "start" },
+        tooltip: {
+          callbacks: {
+            title: (items) => `${items[0].label}:00`,
+            label: (c) => `${c.dataset.label}: ${deg(c.parsed.y)}`,
+          },
+        },
+      },
+    },
+  }));
+
+  $("m3-table").innerHTML = m3.rooms.map((r) => {
+    const color = `var(--room-${r.key})`;
+    const lag = r.lag_ok ? `${r.lag_h > 0 ? "+" : ""}${fmt(r.lag_h)} год` : "не визначений";
+    return `<tr>
+      <th scope="row"><span class="swatch" style="background:${color}"></span>${r.label}</th>
+      <td class="n">у ${fmt(r.smoothing, 1)} ×</td>
+      <td class="n">${lag}</td>
+      <td class="n">+${fmt(r.sens, 2)} (${fmt(r.sens_lo, 2)}–${fmt(r.sens_hi, 2)})</td>
+    </tr>`;
+  }).join("");
+
+  $("m3-comfort-cap").textContent =
+    `Комфортом вважаємо ${m3.comfort_low}–${m3.comfort_high} °C. Дані охоплюють березень–вересень, ` +
+    `тож «надто тепло» — це літо, а не постійний стан квартири.`;
+
+  const comfort = m3.comfort;
+  charts.push(new Chart($("c-m3-comfort"), {
+    type: "bar",
+    data: {
+      labels: comfort.map((c) => c.label),
+      datasets: [
+        { label: "надто холодно", data: comfort.map((c) => c.cold), backgroundColor: t.bedroom },
+        { label: `комфортно ${m3.comfort_low}–${m3.comfort_high} °C`, data: comfort.map((c) => c.ok), backgroundColor: t.neutralOk },
+        { label: "надто тепло", data: comfort.map((c) => c.hot), backgroundColor: t.printernya },
+      ].map((d) => ({ ...d, borderColor: t.surface, borderWidth: 2, borderRadius: 2, maxBarThickness: 44 })),
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ stacked: true, gridAxis: "x", xMax: 100, xTitle: "% часу" }),
+      plugins: {
+        legend: { position: "top", align: "start" },
+        tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${pct(c.parsed.x)}` } },
+      },
+    },
+  }));
+}
+
+/* ------------------------------------------------------------ M4 */
+function renderM4() {
+  const m4 = DATA.m4, t = tokens();
+  $("m4-lead").textContent =
+    `При −10 °C надворі кімната охолоджується з ${m4.t0} до ${m4.target} °C приблизно за ${fmt(m4.hours_minus10)} годин — ` +
+    `це оцінка, порахована на літніх даних.`;
+
+  const cols = ["bedroom", "kitchen", "printernya"];
+  const values = m4.grid.flatMap((r) => cols.map((c) => r[c]));
+  const lo = Math.min(...values), hi = Math.max(...values);
+  // Послідовна шкала одного тону: що більше годин, то насиченіший колір.
+  const scale = (v) => 0.1 + 0.82 * Math.sqrt((v - lo) / (hi - lo));
+
+  $("m4-table").innerHTML = m4.grid.map((row) => {
+    const cells = cols.map((c) => {
+      const a = scale(row[c]);
+      return `<td style="background:${alpha(t.accent, a)};color:${inkOn(t.accent, a, t.ground)}" ` +
+             `title="${fmt(row.t_out)} °C надворі → ${fmt(row[c])} год">${fmt(row[c])}</td>`;
+    }).join("");
+    return `<tr><th scope="row">${fmt(row.t_out)} °C</th>${cells}</tr>`;
+  }).join("");
+
+  [["h-bed", "кімната"], ["h-kit", "кухня"], ["h-pri", "кладова"]].forEach(([id, label], i) => {
+    $(id).innerHTML = `<span class="swatch" style="background:var(--room-${cols[i]})"></span>${label}`;
+  });
+
+  $("m4-note").innerHTML =
+    `<b>Чесно про це число.</b> ${m4.note} Коефіцієнт k оцінено на літніх даних ` +
+    `(k = ${fmt(m4.k_bedroom, 4)} 1/год, довірчий інтервал ${fmt(m4.k_bedroom_lo, 4)} … ${fmt(m4.k_bedroom_hi, 4)} — ` +
+    `він широкий і перетинає нуль). Уточнимо взимку, коли з'являться холодні блекаути.`;
+}
+
+/* ------------------------------------------------------------ M5 */
+function renderM5() {
+  const m5 = DATA.m5, t = tokens();
+  $("m5-lead").textContent =
+    `Кладова без вікна тримається на ${deg(m5.gap_bedroom)} теплішою за кімнату — і розрив росте від весни до осені.`;
+
+  charts.push(new Chart($("c-m5-gap"), {
+    type: "bar",
+    data: {
+      labels: m5.monthly.map((d) => d.label),
+      datasets: [
+        { label: "тепліша за кімнату", data: m5.monthly.map((d) => d.bedroom), backgroundColor: t.bedroom },
+        { label: "тепліша за кухню", data: m5.monthly.map((d) => d.kitchen), backgroundColor: t.kitchen },
+      ].map((d) => ({ ...d, borderRadius: 3, maxBarThickness: 34 })),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ yTitle: "різниця, °C", beginAtZero: true }),
+      plugins: {
+        legend: { position: "top", align: "start" },
+        tooltip: { callbacks: { label: (c) => `Кладова ${c.dataset.label}: ${deg(c.parsed.y, 2)}` } },
+      },
+    },
+  }));
+
+  $("m5-cap").textContent =
+    `У квітні різниця майже нульова, у вересні — вже ${deg(m5.monthly[m5.monthly.length - 1].bedroom, 1)}. ` +
+    `Кухня посередині: вона теж прогрівається, але має вікно.`;
+
+  $("m5-metrics").innerHTML = [
+    { v: `+${fmt(m5.nvme_coef, 2)} °C`, l: `на кожен +1 °C температури NVMe-диска NAS (R² = ${fmt(m5.nvme_r2, 2)})` },
+    { v: `${fmt(m5.pc_coef, 3)} °C`, l: `на кожні +100 Вт ПК — статистично нуль (p = ${fmt(m5.pc_p, 2)})` },
+    { v: pct(m5.pc_on_pct, 0), l: "часу ПК був увімкнений (покриття датчика 34 %)" },
+    { v: fmt(m5.n_hours), l: "годин із показами техніки в моделі" },
+  ].map((m) => `<div class="metric"><p class="v">${m.v}</p><p class="l">${m.l}</p></div>`).join("");
+
+  $("m5-text").innerHTML =
+    `Єдиний надійний сигнал техніки — <b>NVMe-диск NAS: +${fmt(m5.nvme_coef, 2)} °C у кладовій на кожен +1 °C диска</b>. ` +
+    `Потужність ПК не дала нічого: коефіцієнт ${fmt(m5.pc_coef, 3)} °C на 100 Вт із p = ${fmt(m5.pc_p, 2)}, ` +
+    `тобто нульовий результат. Це теж відповідь: ПК у кімнаті — не обігрівач, а от кладова гріється сама.`;
+}
+
+/* ------------------------------------------------------------ M6 */
+function renderM6() {
+  const m6 = DATA.m6, t = tokens();
+  const evening = m6.counts.slice(17, 23).reduce((a, b) => a + b, 0);
+  $("m6-lead").textContent =
+    `Готують увечері: ${evening} із ${m6.n_hourly} подій припадають на 17:00–22:00.`;
+
+  charts.push(new Chart($("c-m6-hours"), {
+    type: "bar",
+    data: {
+      labels: m6.hours.map((h) => String(h).padStart(2, "0")),
+      datasets: [{
+        label: "подій готування",
+        data: m6.counts,
+        backgroundColor: m6.hours.map((h) => (h >= 17 && h <= 22) ? t.kitchen : alpha(t.kitchen, 0.38)),
+        borderRadius: { topLeft: 3, topRight: 3 },
+        borderSkipped: "bottom",
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ xTitle: "година доби, Київ", yTitle: "подій", intStep: true }),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items) => `${items[0].label}:00`,
+            label: (c) => `${fmt(c.parsed.y)} ${c.parsed.y === 1 ? "подія" : "події"}`,
+          },
+        },
+      },
+    },
+  }));
+
+  $("m6-cap").textContent =
+    `${m6.n_hourly} подій за шість місяців, знайдених по погодинній вологості; ` +
+    `насичені стовпчики — вечірнє вікно 17:00–22:00. ` +
+    `Ще ${m6.n_detailed} події з детальної історії (10 днів) сюди не входять — саме на них порахований приріст вологості.`;
+
+  $("m6-metrics").innerHTML = [
+    { v: `+${fmt(m6.rise_pp, 1)} п.п.`, l: `середній стрибок вологості за подію (${m6.n_detailed} детальних подій)` },
+    { v: `${fmt(m6.return_min)} хв`, l: "щоб вологість повернулася до норми" },
+    { v: `${m6.peak_hour}:00`, l: "пікова година готування за розрахунком M6" },
+    { v: pct(m6.evening_pct, 1), l: "подій припадає на вечір" },
+  ].map((m) => `<div class="metric"><p class="v">${m.v}</p><p class="l">${m.l}</p></div>`).join("");
+}
+
+/* ------------------------------------------------------------ M7 */
+function renderM7() {
+  const m7 = DATA.m7, t = tokens();
+  $("m7-lead").textContent =
+    `Бустинг помиляється на ${deg(m7.best_mae, 2)} — на ${deg(m7.gain, 2)} краще за найкращий базовий прогноз.`;
+
+  const sorted = [...m7.models].sort((a, b) => b.mae - a.mae);
+  charts.push(new Chart($("c-m7-mae"), {
+    type: "bar",
+    data: {
+      labels: sorted.map((m) => m.label),
+      datasets: [{
+        label: "MAE, °C",
+        data: sorted.map((m) => m.mae),
+        backgroundColor: sorted.map((m) =>
+          m.key === m7.best ? t.bedroom : (m.kind === "модель" ? alpha(t.bedroom, 0.45) : t.outdoor)),
+        borderRadius: 3,
+        maxBarThickness: 32,
+      }],
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ gridAxis: "x", xTitle: "MAE, °C" }),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (c) => {
+              const m = sorted[c.dataIndex];
+              return [`MAE ${deg(m.mae, 2)}`, `RMSE ${deg(m.rmse, 2)}`, m.kind];
+            },
+          },
+        },
+      },
+    },
+  }));
+
+  $("m7-cap").textContent =
+    `Сірі смуги — базові прогнози, сині — моделі. Поділ на train/test за часом: ` +
+    `${fmt(m7.n_train)} годин на навчання, ${fmt(m7.n_test)} на тест із ${m7.test_start}.`;
+
+  $("m7-text").innerHTML =
+    `Прогноз температури в кімнаті на ${m7.horizon_h} годин уперед. Бустинг дав ` +
+    `<b>MAE ${fmt(m7.best_mae, 2)} °C проти ${fmt(m7.models.find((m) => m.key === "persistence").mae, 2)} °C</b> ` +
+    `у найкращого базового — виграш ${fmt(m7.gain, 2)} °C, або ${fmt(m7.gain_pct)} %. ` +
+    `Найважливіші ознаки: ${m7.features.join(", ")}. ` +
+    `Виграш невеликий, і це чесний результат: квартира дуже інерційна, тож «як зараз» — уже сильний прогноз.`;
+}
+
+/* ------------------------------------------------------------ M1 */
+function renderM1() {
+  const m1 = DATA.m1, t = tokens();
+  $("m1-lead").textContent =
+    `0 дублікатів і 0 значень поза фізичними межами — але покриття датчиків розходиться від 34 % до 98 %.`;
+
+  const colorOf = { bedroom: t.bedroom, kitchen: t.kitchen, printernya: t.printernya, other: t.outdoor };
+  charts.push(new Chart($("c-m1-coverage"), {
+    type: "bar",
+    data: {
+      labels: m1.sensors.map((s) => s.label),
+      datasets: [{
+        label: "покриття, %",
+        data: m1.sensors.map((s) => s.coverage),
+        backgroundColor: m1.sensors.map((s) => colorOf[s.group]),
+        borderRadius: 3,
+        maxBarThickness: 22,
+      }],
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true, maintainAspectRatio: false,
+      scales: axes({ gridAxis: "x", xMax: 100, xTitle: "% календарних годин" }),
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (c) => {
+              const s = m1.sensors[c.dataIndex];
+              return [`${pct(s.coverage)} покриття`, `${fmt(s.hours)} із ${fmt(s.calendar)} годин`];
+            },
+          },
+        },
+      },
+    },
+  }));
+
+  $("m1-bullets").innerHTML = [
+    { k: "0 / 0", v: `дублікатів і значень поза фізичними межами на ${fmt(DATA.meta.rows_hourly)} погодинних рядках.` },
+    { k: `${fmt(m1.longest_stuck)} год`, v: `найдовший відрізок «застряглого» датчика: показ не змінювався жодного разу. Усього ${fmt(m1.stuck_hours)} таких годин у ${fmt(m1.n_stuck_runs)} відрізках — вони викинуті з аналізу клімату.` },
+    { k: pct(m1.coverage_rooms, 1), v: `середнє покриття кімнатних датчиків (по всіх ${fmt(DATA.meta.sensors)} датчиках — ${pct(m1.coverage_all, 1)}, бо датчики ПК майже мовчать).` },
+  ].map((b) => `<li><span class="k">${b.k}</span><span>${b.v}</span></li>`).join("");
+}
+
+/* ------------------------------------------------------------ theme */
+function repaint() {
+  applyDefaults();
+  charts.forEach((c) => c.destroy());
+  charts.length = 0;
+  renderAllCharts();
+}
+
+let renderAllCharts = () => {};
+
+/* ------------------------------------------------------------ boot */
+function boot() {
+  const meta = DATA.meta;
+  $("hero-period").textContent = `${meta.period_start}–${meta.period_end}`;
+  $("hero-eyebrow").textContent =
+    `Харків · ${fmt(meta.sensors)} датчиків · ${fmt(meta.rows_hourly)} погодинних рядків`;
+  $("built").textContent =
+    `Дані: ${meta.period_start} — ${meta.period_end} · зібрано ${fmt(meta.rows_detailed)} детальних показів · сторінку зібрано ${meta.built}`;
+
+  renderKpis();
+  renderStrip($("hero-strip"), false);
+  renderStrip($("m2-strip"), true);
+
+  applyDefaults();
+  renderAllCharts = () => { renderM2(); renderM3(); renderM5(); renderM6(); renderM7(); renderM1(); };
+  renderAllCharts();
+  renderM4();
+
+  // Тема може змінитися і з боку системи, і з боку хоста (data-theme).
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    repaint(); renderM4();
+  });
+  new MutationObserver(() => { repaint(); renderM4(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>

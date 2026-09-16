@@ -1,0 +1,14 @@
+# raw Home Assistant dumps - never in git (privacy)
+data/raw/
+
+# secrets
+.env
+*token*
+
+# python / jupyter
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# excel tmp
+~$*.xlsx

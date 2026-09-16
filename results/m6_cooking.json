@@ -1,0 +1,17 @@
+{
+  "threshold_pp_detailed": 8.0,
+  "threshold_pp_hourly": 6.0,
+  "baseline_window_min": 60,
+  "hourly_window_h": 3,
+  "n_events_detailed": 6,
+  "events_per_week_detailed": 4.2,
+  "n_events_hourly": 26,
+  "events_per_week_hourly": 0.99,
+  "mean_rise_pp": 12.34,
+  "median_rise_pp": 12.43,
+  "mean_duration_min": 60.0,
+  "mean_return_min": 38.17,
+  "peak_hour_kyiv": 19,
+  "share_evening_pct": 53.8,
+  "kitchen_coverage_pct": 68.0
+}

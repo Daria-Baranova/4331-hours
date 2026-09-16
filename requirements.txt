@@ -1,0 +1,15 @@
+pandas>=3.0
+numpy>=2.0
+scipy
+matplotlib
+seaborn
+requests
+websockets
+statsmodels
+scikit-learn
+psycopg2-binary
+SQLAlchemy
+openpyxl
+nbformat
+nbconvert
+ipykernel

@@ -1,0 +1,15 @@
+entity_id,label_ua,room,metric,first_ts,raw_rows,non_numeric,duplicates,out_of_range,stuck_hours,calendar_hours,present_hours,coverage_pct,gaps_gt_1h,dropped_pct
+sensor.test_product_humidity,кімната · вологість,Bedroom,humidity,2026-03-16 08:00:00+00:00,4323,4,0,0,169,4402,4323,98.2,15,0.0
+sensor.test_product_illuminance,кімната · освітленість,Bedroom,illuminance,2026-04-04 22:00:00+00:00,3856,0,0,0,0,3932,3856,98.1,7,0.0
+sensor.test_product_temperature,кімната · температура,Bedroom,temperature,2026-03-16 08:00:00+00:00,4323,4,0,0,169,4402,4323,98.2,15,0.0
+sensor.test_product_humidity_2,кухня · вологість,Kitchen,humidity,2026-04-04 12:00:00+00:00,2679,0,0,0,23,3942,2679,68.0,9,0.0
+sensor.test_product_temperature_2,кухня · температура,Kitchen,temperature,2026-04-04 12:00:00+00:00,2679,0,0,0,23,3942,2679,68.0,9,0.0
+sensor.test_product_humidity_3,кладова · вологість,Printernya,humidity,2026-04-04 16:00:00+00:00,3795,2,0,0,0,3938,3795,96.4,9,0.0
+sensor.test_product_temperature_3,кладова · температура,Printernya,temperature,2026-04-04 16:00:00+00:00,3795,2,0,0,0,3938,3795,96.4,9,0.0
+sensor.tiny_soil_sensor_temperature,квітка · температура (батарейка),Soil,temperature,2026-06-14 19:00:00+00:00,1709,70,0,0,0,2231,1709,76.6,9,0.0
+sensor.192_168_0_153_cpu_load,сервер · завантаження CPU,Tech,cpu_load,2026-04-01 11:00:00+00:00,3816,0,0,0,0,4015,3816,95.0,8,0.0
+sensor.nas_disk_sda_temperature,NAS диск sda,Tech,nas_temp,2026-04-20 20:00:00+00:00,3352,0,0,0,0,3550,3352,94.4,8,0.0
+sensor.nas_disk_sdb_temperature,NAS диск sdb,Tech,nas_temp,2026-04-20 20:00:00+00:00,3352,0,0,0,0,3550,3352,94.4,8,0.0
+sensor.nas_nvme_cache_temperature,NAS NVMe,Tech,nas_temp,2026-04-20 20:00:00+00:00,3352,0,0,0,0,3550,3352,94.4,8,0.0
+sensor.pc_cpu_power,ПК · потужність,Tech,pc_power,2026-03-21 13:00:00+00:00,1450,0,0,0,0,4277,1450,33.9,133,0.0
+sensor.pc_cpu_temperature,ПК · температура,Tech,pc_temp,2026-03-21 13:00:00+00:00,1459,0,0,0,0,4277,1459,34.1,133,0.0
