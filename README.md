@@ -243,43 +243,10 @@ Tool split: **Python ≈ 60 %** (ETL, analysis, model, charts) · **SQL ≈ 25 %
 └── docs/INTERVIEW_STORY.md        # the 30-second story (Ukrainian)
 ```
 
-## How to Reproduce
-
-```bash
-pip install -r requirements.txt
-```
-
-**Optional — re-download the raw data** (needs access to my Home Assistant; everyone else skips
-this step, `data/clean/` is already in the repo):
-
-```bash
-export HA_URL="http://<your-ha>:8123"
-export HA_TOKEN="<long-lived token>"      # or HA_TOKEN_FILE=/path/to/token.txt
-python -m src.fetch_raw                    # writes data/raw/ — never committed
-python -m src.cleaning                     # rebuilds data/clean/ + results/m1_quality.*
-```
-
-**The normal path — start from the committed clean data:**
-
-```bash
-# notebooks: open in Jupyter, or run headless
-python -m jupyter nbconvert --to notebook --execute --inplace notebooks/01_data_quality.ipynb
-# ... the same for 02 … 07; each notebook runs top to bottom and rewrites results/ and images/
-
-python dashboard/build_dashboard.py        # dashboard/index.html from results/*.json
-python -m src.excel_report                 # excel/report.xlsx
-```
-
-**SQL (PostgreSQL 18):** connection parameters come from `PGHOST` / `PGUSER` / `PGPASSWORD` /
-`PGDATABASE` only — never from code. `python -m src.load_db` creates the `home4331` database and
-loads the five tables, then the query files run in order. Full instructions in
-[`sql/README.md`](sql/README.md).
-
-On Windows set `PYTHONUTF8=1` — the charts and notebooks are in Ukrainian.
 
 ## Author
 
-**Daria Baranova** — data analytics student, Kharkiv.
+**Daria Baranova** — trainee data analyst, Kharkiv.
 
 - GitHub: [Daria-Baranova](https://github.com/Daria-Baranova)
 - LinkedIn: *(link to be added)*

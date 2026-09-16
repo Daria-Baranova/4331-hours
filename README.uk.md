@@ -247,43 +247,10 @@ PostgreSQL / SQL → Excel → HTML-дашборд.
 └── docs/INTERVIEW_STORY.md        # історія на 30 секунд (українською)
 ```
 
-## Як відтворити
-
-```bash
-pip install -r requirements.txt
-```
-
-**Необовʼязково — перезавантажити сирі дані** (потрібен доступ до мого Home Assistant; решті цей
-крок пропустити, `data/clean/` уже в репозиторії):
-
-```bash
-export HA_URL="http://<ваш-ha>:8123"
-export HA_TOKEN="<довгий токен>"           # або HA_TOKEN_FILE=/шлях/до/token.txt
-python -m src.fetch_raw                     # пише в data/raw/ — у git не йде
-python -m src.cleaning                      # перебудовує data/clean/ + results/m1_quality.*
-```
-
-**Звичайний шлях — старт із чистих даних у репозиторії:**
-
-```bash
-# ноутбуки: відкрити в Jupyter або виконати headless
-python -m jupyter nbconvert --to notebook --execute --inplace notebooks/01_data_quality.ipynb
-# ... так само 02 … 07; кожен ноутбук проходить згори вниз і перезаписує results/ та images/
-
-python dashboard/build_dashboard.py         # dashboard/index.html із results/*.json
-python -m src.excel_report                  # excel/report.xlsx
-```
-
-**SQL (PostgreSQL 18):** параметри зʼєднання беруться лише зі змінних `PGHOST` / `PGUSER` /
-`PGPASSWORD` / `PGDATABASE` — у коді пароля немає. `python -m src.load_db` створює базу `home4331`
-і вантажить пʼять таблиць, далі файли запитів запускаються по черзі. Повна інструкція —
-у [`sql/README.md`](sql/README.md).
-
-На Windows треба `PYTHONUTF8=1` — графіки й ноутбуки українською.
 
 ## Авторка
 
-**Дарія Баранова** — студентка на дата-аналітика, Харків.
+**Дар'я Баранова** — трейні дата-аналітик, Харків.
 
 - GitHub: [Daria-Baranova](https://github.com/Daria-Baranova)
 - LinkedIn: *(посилання буде додано)*
