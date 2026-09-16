@@ -13,6 +13,7 @@ import csv
 import json
 import pathlib
 import datetime as dt
+from decimal import Decimal, ROUND_HALF_UP
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
@@ -156,7 +157,7 @@ def build_m3(m3: dict) -> dict:
             "mean": round(m3[f"{key}_mean_temp"], 1),
             "min": round(m3[f"{key}_min_temp"], 1),
             "max": round(m3[f"{key}_max_temp"], 1),
-            "smoothing": round(m3[f"{key}_smoothing_x"], 1),
+            "smoothing": float(Decimal(str(m3[f"{key}_smoothing_x"])).quantize(Decimal("0.1"), ROUND_HALF_UP)),
             "daily_range": round(m3[f"{key}_indoor_daily_range"], 1),
             "lag_h": m3[f"{key}_lag_h"],
             "lag_ok": bool(m3[f"{key}_lag_identifiable"]),
